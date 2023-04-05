@@ -30,6 +30,6 @@ class WordApi:
 		except Exception as err:
 			print(f'Error: {err}')
 
-	def	print_formatted(json_string):
+	def print_formatted(json_string):
 		parsed = json.loads(json_string)
 		print(json.dumps(parsed, indent=4, sort_keys=True))
