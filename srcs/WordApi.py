@@ -2,7 +2,7 @@ import requests
 import random
 import json
 
-API 		= 'https://api.dictionaryapi.dev/api/v2/entries/en/'
+API			= 'https://api.dictionaryapi.dev/api/v2/entries/en/'
 WORDS_PATH	= 'words.txt'
 
 class WordApi:
