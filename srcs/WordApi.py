@@ -1,3 +1,4 @@
+from gtts import gTTS
 import requests
 import random
 import json
@@ -33,3 +34,7 @@ class WordApi:
 	def print_formatted(json_string):
 		parsed = json.loads(json_string)
 		print(json.dumps(parsed, indent=4, sort_keys=True))
+
+	def generate_audio():
+		tts = gTTS(text=self.word, lang='en')
+		tts.save('audio.mp3')
