@@ -1,4 +1,3 @@
-from WordApi import WordApi
 from dotenv import load_dotenv
 from discord.ext import commands
 from commands import cping
@@ -20,7 +19,7 @@ async def on_message(message):
 
 @bot.tree.command(name="ping")
 async def ping(interaction):
-	await command_ping(bot, interaction)
+	await cping(bot, interaction)
 
 
 bot.run(TOKEN)

@@ -1,4 +1,4 @@
-from events_utils import create_channel, delete_channel
+from events_utils import create_channel, delete_channel, start_game
 import discord
 
 async def estart(bot):
@@ -9,6 +9,8 @@ async def emessage(bot, message):
 	if message.author == bot.user:
 		return
 	if message.content == 's!start':
+		await delete_channel(message)
 		await create_channel(message)
+		await start_game(message)
 	if message.content == 's!stop':
 		await delete_channel(message)
