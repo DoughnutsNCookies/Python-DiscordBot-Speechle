@@ -1,45 +1,37 @@
 from gtts import gTTS
+from bs4 import BeautifulSoup
 import requests
 import random
 import json
 import os
 
-API			= 'https://api.dictionaryapi.dev/api/v2/entries/en/'
+URL			= 'https://www.thefreedictionary.com/'
 WORDS_PATH	= 'words.txt'
 
 class WordApi:
 	def __init__(self):
+		with open(WORDS_PATH) as f:
+			self.english_words = f.read().splitlines()
+		if not self.english_words:
+			raise ValueError('No English words found in ' + WORDS_PATH)
 		self.word = None
 		self.definition	= None
 		self.sentence = None
 	
 	def generate_word(self):
-		try:
-			with open(WORDS_PATH) as f:
-				english_words = f.read().splitlines()
-			if not english_words:
-				raise ValueError('No English words found in ' + WORDS_PATH)
-			while True:
-				word = random.choice(english_words)
-				response = requests.get(API + word)
+		while True:
+			try:
+				self.word = random.choice(self.english_words).lower()
+				response = requests.get(URL + self.word)
 				if (response.status_code == 200):
-					data = response.json()
-					self.word = data[0].get('word')
-					return
-					# for i in range(len(data[0].get('meanings'))):
-					# 	self.definition = data[0].get('meanings')[i].get('definitions')[0].get('definition')
-					# 	self.sentence = data[0].get('meanings')[i].get('definitions')[0].get('example')
-					# 	if self.word and self.definition and self.sentence:
-					# 		print("Audio file generated")
-					# 		tts = gTTS(text=self.word, lang='en')
-					# 		tts.save(self.word + '-audio.mp3')
-					# 		return 
+					soup = BeautifulSoup(response.text, 'html.parser')
+					extracted = soup.find('div', {'class': 'ds-list'}).text.strip().split(':')
+					self.definition = "".join([extracted[0], extracted[0][:-1]][extracted[0][-1] == '.'].split('.')[-1].strip())
+					break
 				else:
-					print(f'Failed to retrieve the information for {word}: {response.status_code}')
-		except requests.exceptions.HTTPError as err:
-			print(f'Failed to retrieve the information for {word}: {err}')
-		except Exception as err:
-			print(f'Error: {err}')
+					print(f'Failed to retrieve the definition for {self.word}: {response.status_code}')
+			except Exception as err:
+				print(f'Error: {err}: {self.word}')
 	
 	def generate_definition(self):
 		tts = gTTS(text=self.definition, lang='en')
