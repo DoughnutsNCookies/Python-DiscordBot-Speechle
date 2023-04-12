@@ -46,7 +46,7 @@ async def start_game(bot, message):
 	channel = discord.utils.get(category.text_channels, name=channel_name)
 	if not channel:
 		return
-	await channel.send(f"**Welcome to Speechle!** You will be given an audio file to listen and your goal is to transcribe it into text.\n```MARKDOWN\n# Important information\n-> Your time limit is 30 seconds per word\n-> Max amount of points you can get from each word is 3 points\n-> Each hint you use reduces the points by 1\n-> You only get one attempt per word\n# Hints\n-> Definition: Provides a definition of the word\n-> Characters: Given half of the characters used in the word not in order\n```\nScore as high as you can! Good luck and have fun!")
+	await channel.send(f"**Welcome to Speechle!** You will be given an audio file to listen and your goal is to transcribe it into text.\n```MARKDOWN\n# Important\n-> Your time limit is 30 seconds per word\n-> You only get 1 attempt per word\n-> Max amount of points you can get from each word is 3 points\n# Points\n-> 1 point for a correct transcription\n-> 1 point for a correct transcription under 10 seconds\n-> 1 point for not using hint\n# Hints\n-> Definition: Provides a definition of the word\n```Score as high as you can! Good luck and have fun!")
 	try:
 		wordApi = WordApi()
 		while True:
@@ -55,7 +55,7 @@ async def start_game(bot, message):
 			with open (wordApi.word + '-audio.mp3', 'rb') as f:
 				file = discord.File(f, filename='audio.mp3')
 				await channel.send(file=file)
-			await channel.send(f"Word: {wordApi.word}\nDefinition: {wordApi.definition}\nCharacters: {wordApi.characters}")
+			await channel.send(f"Word: {wordApi.word}\nDefinition: {wordApi.definition}\n")
 			wordApi.cleanup()
 			try:
 				message = await bot.wait_for('message', check=lambda message: message.author == message.author and message.channel == channel, timeout=30)

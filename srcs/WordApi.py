@@ -17,11 +17,9 @@ class WordApi:
 	def generate_word(self):
 		self.word = None
 		self.definition	= None
-		self.characters = []
 		while self.definition == None :
 			try:
 				self.word = random.choice(self.english_words).lower()
-				self.characters = random.sample(self.word, len(self.word) // 2)
 				response = requests.get(URL + self.word)
 				if (response.status_code == 200):
 					soup = BeautifulSoup(response.text, 'html.parser')
