@@ -13,12 +13,12 @@ class WordApi:
 			self.english_words = f.read().splitlines()
 		if not self.english_words:
 			raise ValueError('No English words found in ' + WORDS_PATH)
+	
+	def generate_word(self):
 		self.word = None
 		self.definition	= None
 		self.characters = []
-	
-	def generate_word(self):
-		while self.word is None and self.definition is None :
+		while self.definition == None :
 			try:
 				self.word = random.choice(self.english_words).lower()
 				self.characters = random.sample(self.word, len(self.word) // 2)
