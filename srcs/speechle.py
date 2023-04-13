@@ -1,7 +1,7 @@
-from dotenv import load_dotenv
-from discord.ext import commands
-from commands import cping
 from events import estart, emessage
+from discord.ext import commands
+from dotenv import load_dotenv
+from commands import cping
 import discord
 import os
 
@@ -20,6 +20,5 @@ async def on_message(message):
 @bot.tree.command(name="ping")
 async def ping(interaction):
 	await cping(bot, interaction)
-
 
 bot.run(TOKEN)

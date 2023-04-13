@@ -1,4 +1,5 @@
 from WordApi import WordApi
+from View import MyView
 import asyncio
 import discord
 import time
@@ -38,6 +39,11 @@ async def delete_channel(message):
 		await category.delete()
 
 async def start_game(bot, message):
+	async def update_message(myView, sentView, channel, content):
+		myView.button.disabled = True
+		await sentView.edit(view=myView)
+		await channel.send(content)
+
 	channel_name = re.sub(r"[^a-z]+", "", message.author.name.lower()) + "-" + message.author.discriminator
 	guild = message.guild
 
@@ -55,18 +61,20 @@ async def start_game(bot, message):
 			wordApi.generate_word()
 			with open (wordApi.word + '-audio.mp3', 'rb') as f:
 				file = discord.File(f, filename='audio.mp3')
-				await channel.send(file=file)
-			await channel.send(f"Word: {wordApi.word}\nDefinition: {wordApi.definition}\n")
+			myView = MyView(channel, wordApi)
+			sentView = await channel.send(file=file, view=myView)
 			wordApi.cleanup()
+			await channel.send(f"Word: {wordApi.word}\nDefinition: {wordApi.definition}\n")
+
 			try:
 				start_time = time.monotonic()
-				message = await bot.wait_for('message', check=lambda message: message.author == message.author and message.channel == channel, timeout=30)
+				message = await bot.wait_for('message', check=lambda received: received.author == message.author and received.channel == channel, timeout=30)
 				duration = time.monotonic() - start_time
 			except asyncio.TimeoutError:
-				return await channel.send("**Time's up!** The word was ``" + wordApi.word + "``. Better luck next time! Type ''s!start'' outside of this room to play again to start a new game!")
+				return await update_message(myView, sentView, channel, "**Time's up!** The word was ``" + wordApi.word + "``. Better luck next time! Type ''s!start'' outside of this room to play again to start a new game!")
 			if message.content == wordApi.word:
-				await channel.send("**Correct!**")
+				await update_message(myView, sentView, channel, "**Correct!**")
 			else:
-				return await channel.send("**Incorrect!** The word was ``" + wordApi.word + "``. Better luck next time!\nType ``s!start`` outside of this room to play again to start a new game!")
+				return await update_message(myView, sentView, channel, "**Incorrect!** The word was ``" + wordApi.word + "``. Better luck next time!\nType ``s!start`` outside of this room to play again to start a new game!")
 	except Exception as e:
 		print(e)

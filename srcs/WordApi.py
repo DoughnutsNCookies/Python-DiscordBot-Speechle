@@ -1,5 +1,5 @@
-from gtts import gTTS
 from bs4 import BeautifulSoup
+from gtts import gTTS
 import requests
 import random
 import os
@@ -39,8 +39,8 @@ class WordApi:
 		tts.save(self.word + '-definition.mp3')
 	
 	def cleanup(self):
-		try:
-			os.remove(self.word + '-audio.mp3')
-			os.remove(self.word + '-definition.mp3')
-		except FileNotFoundError:
-			pass
+		for file in [f"{self.word}-audio.mp3", f"{self.word}-definition.mp3"]:
+			try:
+				os.remove(file)
+			except FileNotFoundError:
+				pass
