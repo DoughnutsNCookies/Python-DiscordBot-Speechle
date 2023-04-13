@@ -1,6 +1,7 @@
 from WordApi import WordApi
 import asyncio
 import discord
+import time
 import re
 
 CATEGORY_NAME = "Speechle"
@@ -58,7 +59,9 @@ async def start_game(bot, message):
 			await channel.send(f"Word: {wordApi.word}\nDefinition: {wordApi.definition}\n")
 			wordApi.cleanup()
 			try:
+				start_time = time.monotonic()
 				message = await bot.wait_for('message', check=lambda message: message.author == message.author and message.channel == channel, timeout=30)
+				duration = time.monotonic() - start_time
 			except asyncio.TimeoutError:
 				return await channel.send("**Time's up!** The word was ``" + wordApi.word + "``. Better luck next time! Type ''s!start'' outside of this room to play again to start a new game!")
 			if message.content == wordApi.word:
