@@ -19,8 +19,6 @@ class WordApi:
 		self.definition	= None
 		while self.definition == None :
 			try:
-				self.word = ['yes']
-				self.word = self.word[3]
 				self.word = random.choice(self.english_words).lower()
 				response = requests.get(URL + self.word)
 				if (response.status_code == 200):

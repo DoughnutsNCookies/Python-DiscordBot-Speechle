@@ -76,4 +76,4 @@ async def start_game(bot, message):
 			else:
 				return await update_message(myView, sentView, channel, discord.Embed(title=f"Final time: {round(time.perf_counter() - startTime, 2)} seconds", color=discord.Color.red()), "**Incorrect!** The word was ``" + wordApi.word + "``. Better luck next time!\nType ``s!start`` outside of this room to play again to start a new game!")
 	except Exception as e:
-		return await channel.send(embed=discord.Embed(title="Something broke again, please try again later :')", description=f"Error: {str(e)}", color=discord.Color.red()))
+		return await channel.send(embed=discord.Embed(title="Something broke again, please try again later :smiling_face_with_tear:", description=f"Error: {str(e)}", color=discord.Color.red()))
