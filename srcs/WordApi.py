@@ -12,13 +12,15 @@ class WordApi:
 		with open(WORDS_PATH) as f:
 			self.english_words = f.read().splitlines()
 		if not self.english_words:
-			raise ValueError('No English words found in ' + WORDS_PATH)
+			raise ValueError("From WordApi - No English words found in " + WORDS_PATH)
 	
 	def generate_word(self):
 		self.word = None
 		self.definition	= None
 		while self.definition == None :
 			try:
+				self.word = ['yes']
+				self.word = self.word[3]
 				self.word = random.choice(self.english_words).lower()
 				response = requests.get(URL + self.word)
 				if (response.status_code == 200):
@@ -31,8 +33,8 @@ class WordApi:
 						tts.save(self.word + '-audio.mp3')
 				else:
 					print(f'Failed to retrieve the definition for {self.word}: {response.status_code}')
-			except Exception as e:
-				print(f'Failed to retrieve the definition for {self.word}: {e}')
+			except Exception as error:
+				raise ValueError("From WordApi - " + str(error))
 	
 	def generate_definition(self):
 		tts = gTTS(text=self.definition, lang='en')
