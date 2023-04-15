@@ -40,9 +40,9 @@ async def delete_channel(message):
 		await category.delete()
 
 async def start_game(bot, message):
-	async def update_message(myView, sentView, channel, content):
+	async def update_message(myView, sentView, channel, myEmbed, content):
 		myView.button.disabled = True
-		await sentView.edit(view=myView)
+		await sentView.edit(view=myView, embed=myEmbed)
 		await channel.send(content)
 
 	channel_name = re.sub(r"[^a-z]+", "", message.author.name.lower()) + "-" + message.author.discriminator
@@ -61,23 +61,19 @@ async def start_game(bot, message):
 			await channel.send("Generating word...")
 			wordApi.generate_word()
 			with open (wordApi.word + '-audio.mp3', 'rb') as f:
-				file = discord.File(f, filename='audio.mp3')
+				myFile = discord.File(f, filename='audio.mp3')
 			myView = MyView(channel, wordApi)
-			sentView = await channel.send(file=file, view=myView)
+			sentView = await channel.send(file=myFile, view=myView, embed=discord.Embed(title=f"Time runs out <t:{int(time.time()) + TIMEOUT + TIME_BUFFER}:R>", color=discord.Color.blurple()))
 			wordApi.cleanup()
 			await channel.send(f"Word: {wordApi.word}\nDefinition: {wordApi.definition}\n")
 			try:
 				startTime = time.perf_counter()
-				sentEmbed = await channel.send(embed=discord.Embed(title=f"Time runs out <t:{int(time.time()) + TIMEOUT + TIME_BUFFER}:R>", color=discord.Color.blurple()))
 				message = await bot.wait_for('message', check=lambda received: received.author == message.author and received.channel == channel, timeout=(TIMEOUT))
 			except asyncio.TimeoutError:
-				await sentEmbed.edit(embed=discord.Embed(title=f"Final time: {TIMEOUT}.00 seconds", color=discord.Color.red()))
-				return await update_message(myView, sentView, channel, "**Time's up!** The word was ``" + wordApi.word + "``. Better luck next time! Type ``s!start`` outside of this room to play again to start a new game!")
+				return await update_message(myView, sentView, channel, discord.Embed(title=f"Final time: {TIMEOUT}.00 seconds", color=discord.Color.red()), "**Time's up!** The word was ``" + wordApi.word + "``. Better luck next time! Type ``s!start`` outside of this room to play again to start a new game!")
 			if message.content == wordApi.word:
-				await sentEmbed.edit(embed=discord.Embed(title=f"Final time: {round(time.perf_counter() - startTime, 2)} seconds", color=discord.Color.green()))
-				await update_message(myView, sentView, channel, "**Correct!**")
+				await update_message(myView, sentView, channel, discord.Embed(title=f"Final time: {round(time.perf_counter() - startTime, 2)} seconds", color=discord.Color.green()), "**Correct!**")
 			else:
-				await sentEmbed.edit(embed=discord.Embed(title=f"Final time: {round(time.perf_counter() - startTime, 2)} seconds", color=discord.Color.red()))
-				return await update_message(myView, sentView, channel, "**Incorrect!** The word was ``" + wordApi.word + "``. Better luck next time!\nType ``s!start`` outside of this room to play again to start a new game!")
+				return await update_message(myView, sentView, channel, discord.Embed(title=f"Final time: {round(time.perf_counter() - startTime, 2)} seconds", color=discord.Color.red()), "**Incorrect!** The word was ``" + wordApi.word + "``. Better luck next time!\nType ``s!start`` outside of this room to play again to start a new game!")
 	except Exception as e:
 		print(e)
