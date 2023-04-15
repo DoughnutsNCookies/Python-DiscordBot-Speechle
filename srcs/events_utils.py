@@ -6,23 +6,23 @@ import time
 import re
 
 CATEGORY_NAME = "Speechle"
+TIME_BUFFER = 1
 TIMEOUT = 10
 
 async def create_channel(message):
-	channel_name = re.sub(r"[^a-z]+", "", message.author.name.lower()) + "-" + message.author.discriminator
+	channelName = re.sub(r"[^a-z]+", "", message.author.name.lower()) + "-" + message.author.discriminator
 	guild = message.guild
 
 	category = discord.utils.get(guild.categories, name=CATEGORY_NAME)
 	if not category:
-		category_position = message.channel.category.position
-		category = await guild.create_category(CATEGORY_NAME, position=category_position)
+		category = await guild.create_category(CATEGORY_NAME, position=message.channel.category.position)
 
 	overwrites = {
 		guild.default_role: discord.PermissionOverwrite(read_messages=False),
 		guild.me: discord.PermissionOverwrite(read_messages=True),
 		message.author: discord.PermissionOverwrite(read_messages=True)}
 
-	new_channel = await category.create_text_channel(channel_name, overwrites=overwrites)
+	new_channel = await category.create_text_channel(channelName, overwrites=overwrites)
 	await message.reply(re.sub(r"[^a-z]+", "", message.author.name.lower()) + "-" + message.author.discriminator + " room created! Hop on over!")
 
 async def delete_channel(message):
@@ -44,16 +44,6 @@ async def start_game(bot, message):
 		myView.button.disabled = True
 		await sentView.edit(view=myView)
 		await channel.send(content)
-
-	# async def print_time(myView, sentEmbed, channel):
-	# 	startTime = time.monotonic()
-	# 	endTime = startTime + TIMEOUT
-	# 	while time.monotonic() < endTime:
-	# 		remainingTime = endTime - time.monotonic()
-	# 		embed = discord.Embed(title="Time left: " + str(round(remainingTime, 2)) + " seconds")
-	# 		await sentEmbed.edit(embed=embed)
-	# 		print(remainingTime)
-	# 		await asyncio.sleep(1)
 
 	channel_name = re.sub(r"[^a-z]+", "", message.author.name.lower()) + "-" + message.author.discriminator
 	guild = message.guild
@@ -78,7 +68,7 @@ async def start_game(bot, message):
 			await channel.send(f"Word: {wordApi.word}\nDefinition: {wordApi.definition}\n")
 			try:
 				startTime = time.perf_counter()
-				sentEmbed = await channel.send(embed=discord.Embed(title=f"Time runs out <t:{int(time.time()) + TIMEOUT}:R>", color=discord.Color.blurple()))
+				sentEmbed = await channel.send(embed=discord.Embed(title=f"Time runs out <t:{int(time.time()) + TIMEOUT + TIME_BUFFER}:R>", color=discord.Color.blurple()))
 				message = await bot.wait_for('message', check=lambda received: received.author == message.author and received.channel == channel, timeout=(TIMEOUT))
 			except asyncio.TimeoutError:
 				await sentEmbed.edit(embed=discord.Embed(title=f"Final time: {TIMEOUT}.00 seconds", color=discord.Color.red()))
