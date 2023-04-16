@@ -17,3 +17,5 @@ async def emessage(bot, message):
 		await start_game(bot, message)
 	if message.content == 's!stop':
 		await delete_channel(message)
+	if message.content == 's!leaderboard':
+		print(message.author.id)

@@ -23,7 +23,7 @@ async def create_channel(message):
 		guild.me: discord.PermissionOverwrite(read_messages=True),
 		message.author: discord.PermissionOverwrite(read_messages=True)}
 
-	new_channel = await category.create_text_channel(channelName, overwrites=overwrites)
+	await category.create_text_channel(channelName, overwrites=overwrites)
 	await message.reply(re.sub(r"[^a-z]+", "", message.author.name.lower()) + "-" + message.author.discriminator + " room created! Hop on over!")
 
 async def delete_channel(message):
@@ -55,7 +55,7 @@ async def start_game(bot, message):
 	channel = discord.utils.get(category.text_channels, name=channel_name)
 	if not channel:
 		return
-	await channel.send(f"**Welcome to Speechle!** You will be given an audio file to listen and your goal is to transcribe it into text.\n```MARKDOWN\n# Important\n-> Your time limit is 30 seconds per word\n-> You only get 1 attempt per word\n-> Max amount of points you can get from each word is 3 points\n# Points\n-> 1 point for a correct transcription\n-> 1 point for a correct transcription under 15 seconds\n-> 1 point for not using hint\n# Hints\n-> Definition: Provides a definition of the word\n```Score as high as you can! Good luck and have fun!")
+	await channel.send("**Welcome to Speechle!** You will be given an audio file to listen and your goal is to transcribe it into text.\n```MARKDOWN\n# Important\n-> Your time limit is 30 seconds per word\n-> You only get 1 attempt per word\n-> Max amount of points you can get from each word is 3 points\n# Points\n-> 1 point for a correct transcription\n-> 1 point for a correct transcription under 15 seconds\n-> 1 point for not using hint\n# Hints\n-> Definition: Provides a definition of the word\n```Score as high as you can! Good luck and have fun!")
 	try:
 		wordApi = WordApi()
 		totalScore = 0
