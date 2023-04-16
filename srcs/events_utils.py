@@ -53,7 +53,7 @@ async def start_game(bot, message):
 			db[id + "-word"] += totalWord
 		except KeyError:
 			db[id + "-game"] = 1
-			db[id + "-score"] = totalScore
+			db[id + "-score"] = max(db[id + "-score"], totalScore)
 			db[id + "-time"] = totalTime
 			db[id + "-word"] = totalWord
 

@@ -26,7 +26,7 @@ async def emessage(bot, message):
 			score = db[str(message.author.id) + "-score"]
 			time = db[str(message.author.id) + "-time"]
 			words = db[str(message.author.id) + "-word"]
-			await message.reply(embed=discord.Embed(title="Your Speechle stats", description=f"Games played: {games}\nHighest score: {words}\nTotal time played: {round(time, 2)}\nTotal words transcribed: {words}\n\nAverage words transcribed per game: {round(words / games, 2)}\nAverage word per game: {round(words / games, 2)}\nAverage time per word: {round(time / games, 2)}", color=discord.Color.green()))
+			await message.reply(embed=discord.Embed(title="Your Speechle stats", description=f"Games played: {games}\nHighest score: {score}\nTotal time played: {round(time, 2)}\nTotal words transcribed: {words}\n\nAverage words transcribed per game: {round(words / games, 2)}\nAverage word per game: {round(words / games, 2)}\nAverage time per word: {round(time / games, 2)}", color=discord.Color.green()))
 		except KeyError:
 			await message.reply("No data found! Use ``s!start`` to start a game!")
 	if message.content == 's!clear':
