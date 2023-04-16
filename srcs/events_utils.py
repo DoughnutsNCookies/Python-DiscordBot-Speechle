@@ -25,13 +25,13 @@ async def create_channel(message):
 		message.author: discord.PermissionOverwrite(read_messages=True)}
 
 	await category.create_text_channel(channelName, overwrites=overwrites)
-	await message.reply(re.sub(r"[^a-z]+", "", message.author.name.lower()) + "-" + message.author.discriminator + " room created! Hop on over!")
+	await message.reply(embed=discord.Embed(title="Room created!", description=f"{channelName} room created! Hop on over!"), color=discord.Color.green())
 
 async def delete_channel(message):
 	channel_name = re.sub(r"[^a-z]+", "", message.author.name.lower()) + "-" + message.author.discriminator
 	guild = message.guild
 
-	category = discord.utils.get(guild.categories, name=CATEGORY_NAME)
+	category = discord.utils.get(message.guild.categories, name=CATEGORY_NAME)
 	if not category:
 		return
 	channel = discord.utils.get(category.text_channels, name=channel_name)
@@ -60,15 +60,14 @@ async def start_game(bot, message):
 			db[id + "-word"] = totalWord
 
 	channel_name = re.sub(r"[^a-z]+", "", message.author.name.lower()) + "-" + message.author.discriminator
-	guild = message.guild
-
-	category = discord.utils.get(guild.categories, name=CATEGORY_NAME)
+	category = discord.utils.get(message.guild.categories, name=CATEGORY_NAME)
 	if not category:
 		return
 	channel = discord.utils.get(category.text_channels, name=channel_name)
 	if not channel:
 		return
-	await channel.send("**Welcome to Speechle!** You will be given an audio file to listen and your goal is to transcribe it into text.\n```MARKDOWN\n# Important\n-> Your time limit is 30 seconds per word\n-> You only get 1 attempt per word\n-> Max amount of points you can get from each word is 3 points\n# Points\n-> 1 point for a correct transcription\n-> 1 point for a correct transcription under 15 seconds\n-> 1 point for not using hint\n# Hints\n-> Definition: Provides a definition of the word\n```Score as high as you can! Good luck and have fun!")
+	await channel.send(embed=discord.Embed(Title="Welcome to Speechle!", description="You will be given an audio file to listen and your goal is to transcribe it into text.\nScore as high as you can! Good luck and have fun!"))
+	await channel.send("```MARKDOWN\n# Important\n-> Your time limit is 30 seconds per word\n-> You only get 1 attempt per word\n-> Max amount of points you can get from each word is 3 points\n# Points\n-> 1 point for a correct transcription\n-> 1 point for a correct transcription under 15 seconds\n-> 1 point for not using hint\n# Hints\n-> Definition: Provides a definition of the word\n```")
 	try:
 		wordApi = WordApi()
 		totalScore = 0
