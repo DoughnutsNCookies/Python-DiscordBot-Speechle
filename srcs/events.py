@@ -12,6 +12,8 @@ async def emessage(bot, message):
 		return
 	if re.sub(r"[^a-z]+", "", message.author.name.lower()) + "-" + message.author.discriminator == message.channel.name and message.content.startswith('s!'):
 		return await message.channel.send("You can't use Speechle commands in a Speechle room!")
+	if message.content == 's!help':
+		await message.reply("``s!start``: Starts a game of Speechle\n``s!stop``: Stops a game of Speechle\n``s!me``: Shows your Speechle stats\n``s!clear``: Clears your Speechle stats")
 	if message.content == 's!start':
 		await delete_channel(message)
 		await create_channel(message)
@@ -23,3 +25,6 @@ async def emessage(bot, message):
 			await message.reply(db[str(message.author.id)])
 		except KeyError:
 			await message.reply("No data found! Use ``s!start`` to start a game!")
+	if message.content == 's!clear':
+		for key in db.keys():
+			del db[key]
