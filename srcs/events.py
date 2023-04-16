@@ -31,7 +31,7 @@ async def emessage(bot, message):
 			aTPG = round(time / games, 2)
 			await message.reply(embed=discord.Embed(title="Your Speechle stats", description=f"Games played: **{games}**\nHighest score: **{score}**\nTotal time played: **{round(time, 2)}s**\nTotal words transcribed: **{words}**\n\nAverage words transcribed per game: **{aWPG}**\nAverage time per word: **{aTPW}s**\nAverage time per game: **{aTPG}s**", color=discord.Color.green()))
 		except KeyError:
-			await message.reply(embed=discord.Embed(title="No data found!", description=f"Use ``s!start`` to start a game!"))
+			await message.reply(embed=discord.Embed(title="No data found!", description="Use ``s!start`` to start a game!"))
 	if message.content == 's!clear':
 		for key in db.keys():
 			del db[key]

@@ -64,7 +64,7 @@ async def start_game(bot, message):
 	channel = discord.utils.get(category.text_channels, name=channel_name)
 	if not channel:
 		return
-	await channel.send(embed=discord.Embed(Title="Welcome to Speechle!", description="You will be given an audio file to listen and your goal is to transcribe it into text.\nScore as high as you can! Good luck and have fun!"))
+	await channel.send(embed=discord.Embed(title="Welcome to Speechle!", description="You will be given an audio file to listen and your goal is to transcribe it into text.\nScore as high as you can! Good luck and have fun!", color=discord.Color.green()))
 	await channel.send("```MARKDOWN\n# Important\n-> Your time limit is 30 seconds per word\n-> You only get 1 attempt per word\n-> Max amount of points you can get from each word is 3 points\n# Points\n-> 1 point for a correct transcription\n-> 1 point for a correct transcription under 15 seconds\n-> 1 point for not using hint\n# Hints\n-> Definition: Provides a definition of the word\n```")
 	try:
 		wordApi = WordApi()
