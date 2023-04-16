@@ -49,10 +49,12 @@ async def start_game(bot, message):
 
 	def update_database(id, totalScore, totalTime, totalWord):
 		try:
+			db[id + "-game"] += 1
 			db[id + "-score"] = max(db[id + "-score"], totalScore)
 			db[id + "-time"] += totalTime
 			db[id + "-word"] += totalWord
 		except KeyError:
+			db[id + "-game"] = 1
 			db[id + "-score"] = totalScore
 			db[id + "-time"] = totalTime
 			db[id + "-word"] = totalWord

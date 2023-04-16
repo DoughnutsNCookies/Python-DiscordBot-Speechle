@@ -22,6 +22,7 @@ async def emessage(bot, message):
 		await delete_channel(message)
 	if message.content == 's!me':
 		try:
+			print(db[str(message.author.id) + "-game"])
 			print(db[str(message.author.id) + "-score"])
 			print(db[str(message.author.id) + "-time"])
 			print(db[str(message.author.id) + "-word"])
