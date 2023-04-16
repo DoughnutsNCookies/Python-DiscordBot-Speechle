@@ -19,5 +19,8 @@ async def emessage(bot, message):
 	if message.content == 's!stop':
 		await delete_channel(message)
 	if message.content == 's!me':
-		print(db.keys())
-		print(db.get(message.author.id))
+		try:
+			print(db.keys())
+			await message.reply(db.get(message.author.id))
+		except:
+			await message.reply("No data found! Use ``s!start`` to start a game!")
