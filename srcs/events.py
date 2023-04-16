@@ -20,7 +20,6 @@ async def emessage(bot, message):
 		await delete_channel(message)
 	if message.content == 's!me':
 		try:
-			print(db.keys())
-			await message.reply(db.get(message.author.id))
-		except:
+			await message.reply(db[str(message.author.id)])
+		except KeyError:
 			await message.reply("No data found! Use ``s!start`` to start a game!")
