@@ -99,3 +99,16 @@ async def start_game(bot, message):
 				return await update_message(myView, sentView, channel, discord.Embed(title=f"Final score: {totalScore}", description=f"Time: {round(time.perf_counter() - startTime, 2)} seconds", color=discord.Color.red()), "**Incorrect!** The word was ``" + wordApi.word + "``. Better luck next time!\nType ``s!start`` outside of this room to play again to start a new game!")
 	except Exception as e:
 		return await channel.send(embed=discord.Embed(title="Something broke again, please try again later :smiling_face_with_tear:", description=f"Error: {str(e)}", color=discord.Color.red()))
+
+async def show_stats(message):
+	try:
+		games = db[str(message.author.id) + "-game"]
+		score = db[str(message.author.id) + "-score"]
+		time = db[str(message.author.id) + "-time"]
+		words = db[str(message.author.id) + "-word"]
+		aWPG = round(words / games, 2)
+		aTPW = round(time / words, 2)
+		aTPG = round(time / games, 2)
+		await message.reply(embed=discord.Embed(title="Your Speechle stats", description=f"Games played: **{games}**\nHighest score: **{score}**\nTotal time played: **{round(time, 2)}s**\nTotal words transcribed: **{words}**\n\nAverage words transcribed per game: **{aWPG}**\nAverage time per word: **{aTPW}s**\nAverage time per game: **{aTPG}s**", color=discord.Color.green()))
+	except KeyError:
+		await message.reply(embed=discord.Embed(title="No data found!", description="Use ``s!start`` to start a game!"))
