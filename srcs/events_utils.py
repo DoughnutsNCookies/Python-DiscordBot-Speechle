@@ -76,27 +76,26 @@ async def start_game(bot, message):
 			except asyncio.TimeoutError:
 				db[str(message.author.id) + "-score"] = totalScore
 				try:
-					db[str(message.author.id) + "-time"] += totalTime
+					db[str(message.author.id) + "-time"] += time.perf_counter() - startTime
 				except KeyError:
-					db[str(message.author.id) + "-time"] = totalTime
+					db[str(message.author.id) + "-time"] = time.perf_counter() - startTime
 				return await update_message(myView, sentView, channel, discord.Embed(title=f"Final score: {totalScore}", description=f"Time: {TIMEOUT}.00 seconds", color=discord.Color.red()), "**Time's up!** The word was ``" + wordApi.word + "``. Better luck next time! Type ``s!start`` outside of this room to play again to start a new game!")
 			if message.content == wordApi.word:
-				elapsedTime = time.perf_counter() - startTime
 				score[0] -= (elapsedTime > BONUS_TIMEOUT)
 				totalScore += score[0]
 				try:
-					db[str(message.author.id) + "-time"] += totalTime
+					db[str(message.author.id) + "-time"] += time.perf_counter() - startTime
 					db[str(message.author.id) + "-word"] += 1
 				except KeyError:
-					db[str(message.author.id) + "-time"] = totalTime
+					db[str(message.author.id) + "-time"] = time.perf_counter() - startTime
 					db[str(message.author.id) + "-word"] = 1
 				await update_message(myView, sentView, channel, discord.Embed(title=f"Current score: {totalScore}", description=f"Time: {round(time.perf_counter() - startTime, 2)} seconds", color=discord.Color.green()), "**Correct!**")
 			else:
 				db[str(message.author.id) + "-score"] = totalScore
 				try:
-					db[str(message.author.id) + "-time"] += totalTime
+					db[str(message.author.id) + "-time"] += time.perf_counter() - startTime
 				except KeyError:
-					db[str(message.author.id) + "-time"] = totalTime
+					db[str(message.author.id) + "-time"] = time.perf_counter() - startTime
 				return await update_message(myView, sentView, channel, discord.Embed(title=f"Final score: {totalScore}", description=f"Time: {round(time.perf_counter() - startTime, 2)} seconds", color=discord.Color.red()), "**Incorrect!** The word was ``" + wordApi.word + "``. Better luck next time!\nType ``s!start`` outside of this room to play again to start a new game!")
 	except Exception as e:
 		return await channel.send(embed=discord.Embed(title="Something broke again, please try again later :smiling_face_with_tear:", description=f"Error: {str(e)}", color=discord.Color.red()))
