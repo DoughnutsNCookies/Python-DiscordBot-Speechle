@@ -1,4 +1,5 @@
 from events_utils import create_channel, delete_channel, start_game
+from replit import db 
 import discord
 import re
 
@@ -17,5 +18,6 @@ async def emessage(bot, message):
 		await start_game(bot, message)
 	if message.content == 's!stop':
 		await delete_channel(message)
-	if message.content == 's!leaderboard':
-		print(message.author.id)
+	if message.content == 's!me':
+		print(db.keys())
+		print(db.get(message.author.id))

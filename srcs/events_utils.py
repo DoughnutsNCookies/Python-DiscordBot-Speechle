@@ -1,5 +1,6 @@
 from WordApi import WordApi
 from View import MyView
+from replit import db
 import asyncio
 import discord
 import time
@@ -73,12 +74,14 @@ async def start_game(bot, message):
 				startTime = time.perf_counter()
 				message = await bot.wait_for('message', check=lambda received: received.author == message.author and received.channel == channel, timeout=(TIMEOUT))
 			except asyncio.TimeoutError:
+				db[message.author.id] = totalScore
 				return await update_message(myView, sentView, channel, discord.Embed(title=f"Final score: {totalScore}", description=f"Time: {TIMEOUT}.00 seconds", color=discord.Color.red()), "**Time's up!** The word was ``" + wordApi.word + "``. Better luck next time! Type ``s!start`` outside of this room to play again to start a new game!")
 			if message.content == wordApi.word:
 				score[0] -= (time.perf_counter() - startTime > BONUS_TIMEOUT)
 				totalScore += score[0]
 				await update_message(myView, sentView, channel, discord.Embed(title=f"Current score: {totalScore}", description=f"Time: {round(time.perf_counter() - startTime, 2)} seconds", color=discord.Color.green()), "**Correct!**")
 			else:
+				db[message.author.id] = totalScore
 				return await update_message(myView, sentView, channel, discord.Embed(title=f"Final score: {totalScore}", description=f"Time: {round(time.perf_counter() - startTime, 2)} seconds", color=discord.Color.red()), "**Incorrect!** The word was ``" + wordApi.word + "``. Better luck next time!\nType ``s!start`` outside of this room to play again to start a new game!")
 	except Exception as e:
 		return await channel.send(embed=discord.Embed(title="Something broke again, please try again later :smiling_face_with_tear:", description=f"Error: {str(e)}", color=discord.Color.red()))
