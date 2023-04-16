@@ -24,7 +24,7 @@ async def create_channel(message):
 		message.author: discord.PermissionOverwrite(read_messages=True)}
 
 	await category.create_text_channel(channelName, overwrites=overwrites)
-	await message.reply(embed=discord.Embed(title="Room created!", description=f"{channelName} room created! Hop on over!"), color=discord.Color.green())
+	await message.reply(embed=discord.Embed(title="Room created!", description=f"{channelName} room created! Hop on over!", color=discord.Color.green()))
 
 async def delete_channel(message):
 	channel_name = re.sub(r"[^a-z]+", "", message.author.name.lower()) + "-" + message.author.discriminator
