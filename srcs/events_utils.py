@@ -54,7 +54,7 @@ async def start_game(bot, message):
 			db[id + "-word"] += totalWord
 		except KeyError:
 			db[id + "-score"] = totalScore
-			db[id + "-time"] = time.perf_counter() - startTime
+			db[id + "-time"] = totalTime
 			db[id + "-word"] = totalWord
 
 	channel_name = re.sub(r"[^a-z]+", "", message.author.name.lower()) + "-" + message.author.discriminator
