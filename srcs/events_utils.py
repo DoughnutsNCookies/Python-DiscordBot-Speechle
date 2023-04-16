@@ -81,7 +81,7 @@ async def start_game(bot, message):
 					db[str(message.author.id) + "-time"] = time.perf_counter() - startTime
 				return await update_message(myView, sentView, channel, discord.Embed(title=f"Final score: {totalScore}", description=f"Time: {TIMEOUT}.00 seconds", color=discord.Color.red()), "**Time's up!** The word was ``" + wordApi.word + "``. Better luck next time! Type ``s!start`` outside of this room to play again to start a new game!")
 			if message.content == wordApi.word:
-				score[0] -= (elapsedTime > BONUS_TIMEOUT)
+				score[0] -= (time.perf_counter() - startTime > BONUS_TIMEOUT)
 				totalScore += score[0]
 				try:
 					db[str(message.author.id) + "-time"] += time.perf_counter() - startTime
