@@ -47,7 +47,7 @@ async def start_game(bot, message):
 		await sentView.edit(view=myView, embed=myEmbed)
 		await channel.send(content)
 
-	async def update_database(id, totalScore, totalTime, totalWord):
+	def update_database(id, totalScore, totalTime, totalWord):
 		try:
 			db[id + "-score"] = max(db[id + "-score"], totalScore)
 			db[id + "-time"] += totalTime
