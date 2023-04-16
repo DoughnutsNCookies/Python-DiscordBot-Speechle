@@ -69,7 +69,9 @@ async def start_game(bot, message):
 	await channel.send("**Welcome to Speechle!** You will be given an audio file to listen and your goal is to transcribe it into text.\n```MARKDOWN\n# Important\n-> Your time limit is 30 seconds per word\n-> You only get 1 attempt per word\n-> Max amount of points you can get from each word is 3 points\n# Points\n-> 1 point for a correct transcription\n-> 1 point for a correct transcription under 15 seconds\n-> 1 point for not using hint\n# Hints\n-> Definition: Provides a definition of the word\n```Score as high as you can! Good luck and have fun!")
 	try:
 		wordApi = WordApi()
-		totalScore, totalTime, totalWord = 0
+		totalScore = 0
+		totalTime = 0
+		totalWord = 0
 		while True:
 			score = [3]
 			await channel.send("Generating word...")
@@ -87,11 +89,12 @@ async def start_game(bot, message):
 				update_database(str(message.author.id), totalScore, totalTime, totalWord)
 				return await update_message(myView, sentView, channel, discord.Embed(title=f"Final score: {totalScore}", description=f"Time: {TIMEOUT}.00 seconds", color=discord.Color.red()), "**Time's up!** The word was ``" + wordApi.word + "``. Better luck next time! Type ``s!start`` outside of this room to play again to start a new game!")
 			if message.content == wordApi.word:
-				score[0] -= (time.perf_counter() - startTime > BONUS_TIMEOUT)
+				elapsedTime = time.perf_counter() - startTime
+				score[0] -= (elapsedTime > BONUS_TIMEOUT)
 				totalScore += score[0]
-				totalTime += time.perf_counter() - startTime
+				totalTime += elapsedTime
 				totalWord += 1
-				await update_message(myView, sentView, channel, discord.Embed(title=f"Current score: {totalScore}", description=f"Time: {round(time.perf_counter() - startTime, 2)} seconds", color=discord.Color.green()), "**Correct!**")
+				await update_message(myView, sentView, channel, discord.Embed(title=f"Current score: {totalScore}", description=f"Time: {round(elapsedTime, 2)} seconds", color=discord.Color.green()), "**Correct!**")
 			else:
 				update_database(str(message.author.id), totalScore, totalTime, totalWord)
 				return await update_message(myView, sentView, channel, discord.Embed(title=f"Final score: {totalScore}", description=f"Time: {round(time.perf_counter() - startTime, 2)} seconds", color=discord.Color.red()), "**Incorrect!** The word was ``" + wordApi.word + "``. Better luck next time!\nType ``s!start`` outside of this room to play again to start a new game!")
