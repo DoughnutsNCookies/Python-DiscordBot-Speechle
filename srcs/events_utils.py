@@ -13,15 +13,14 @@ BONUS_TIMEOUT = 5
 
 async def create_channel(message):
 	channelName = re.sub(r"[^a-z]+", "", message.author.name.lower()) + "-" + message.author.discriminator
-	guild = message.guild
 
-	category = discord.utils.get(guild.categories, name=CATEGORY_NAME)
+	category = discord.utils.get(message.guild.categories, name=CATEGORY_NAME)
 	if not category:
-		category = await guild.create_category(CATEGORY_NAME, position=message.channel.category.position)
+		category = await message.guild.create_category(CATEGORY_NAME, position=message.channel.category.position)
 
 	overwrites = {
-		guild.default_role: discord.PermissionOverwrite(read_messages=False),
-		guild.me: discord.PermissionOverwrite(read_messages=True),
+		message.guild.default_role: discord.PermissionOverwrite(read_messages=False),
+		message.guild.me: discord.PermissionOverwrite(read_messages=True),
 		message.author: discord.PermissionOverwrite(read_messages=True)}
 
 	await category.create_text_channel(channelName, overwrites=overwrites)
@@ -29,7 +28,6 @@ async def create_channel(message):
 
 async def delete_channel(message):
 	channel_name = re.sub(r"[^a-z]+", "", message.author.name.lower()) + "-" + message.author.discriminator
-	guild = message.guild
 
 	category = discord.utils.get(message.guild.categories, name=CATEGORY_NAME)
 	if not category:

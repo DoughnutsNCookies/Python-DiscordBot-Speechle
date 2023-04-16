@@ -22,11 +22,11 @@ async def emessage(bot, message):
 		await delete_channel(message)
 	if message.content == 's!me':
 		try:
-			print(db[str(message.author.id) + "-game"])
-			print(db[str(message.author.id) + "-score"])
-			print(db[str(message.author.id) + "-time"])
-			print(db[str(message.author.id) + "-word"])
-			await message.reply(embed=discord.Embed(title="Your Speechle stats", description=f"Games played: {db[str(message.author.id) + '-game']}\nHighest score: {db[str(message.author.id) + '-score']}\nTotal time played: {db[str(message.author.id) + '-time']}\nTotal words transcribed: {db[str(message.author.id) + '-word']}\n\nAverage", color=discord.Color.green()))
+			games = db[str(message.author.id) + "-game"]
+			score = db[str(message.author.id) + "-score"]
+			time = db[str(message.author.id) + "-time"]
+			words = db[str(message.author.id) + "-word"]
+			await message.reply(embed=discord.Embed(title="Your Speechle stats", description=f"Games played: {games}\nHighest score: {word}\nTotal time played: {round(time, 2)}\nTotal words transcribed: {words}\n\nAverage words transcribed per game: {words / games}\nAverage word per game: {words / games}\nAverage time per word: {time / games}", color=discord.Color.green()))
 		except KeyError:
 			await message.reply("No data found! Use ``s!start`` to start a game!")
 	if message.content == 's!clear':
