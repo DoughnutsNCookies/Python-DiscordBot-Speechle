@@ -1,6 +1,7 @@
-from pydub import AudioSegment
 from bs4 import BeautifulSoup
 from gtts import gTTS
+import soundfile
+import librosa
 import requests
 import random
 import os
@@ -30,8 +31,8 @@ class WordApi:
 						self.definition = "".join([extracted[0], extracted[0][:-1]][extracted[0][-1] == '.'].split('.')[-1].strip())
 						tts = gTTS(text=self.word, lang='en')
 						tts.save(self.word + '-audio.mp3')
-						newAudio = AudioSegment.from_mp3(self.word + '-audio.mp3') + 15
-						newAudio.export(self.word + '-audio.mp3', format="mp3")
+						audioData, sr = librosa.load(self.word + '-audio.mp3', sr=None)
+						soundfile.write(self.word + '-audio.mp3', audioData * 5, sr)
 				else:
 					print(f'Failed to retrieve the definition for {self.word}: {response.status_code}')
 			except Exception as error:
@@ -40,6 +41,8 @@ class WordApi:
 	def generate_definition(self):
 		tts = gTTS(text=self.definition, lang='en')
 		tts.save(self.word + '-definition.mp3')
+		audioData, sr = librosa.load(self.word + '-definition.mp3', sr=None)
+		soundfile.write(self.word + '-definition.mp3', audioData * 5, sr)
 	
 	def cleanup(self):
 		for file in [f"{self.word}-audio.mp3", f"{self.word}-definition.mp3"]:

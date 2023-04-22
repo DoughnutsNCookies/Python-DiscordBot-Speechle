@@ -8,8 +8,8 @@ import re
 
 CATEGORY_NAME = "Speechle"
 TIME_BUFFER = 1
-TIMEOUT = 10
-BONUS_TIMEOUT = 5
+TIMEOUT = 30
+BONUS_TIMEOUT = 15
 
 async def create_channel(message):
 	channelName = re.sub(r"[^a-z]+", "", message.author.name.lower()) + "-" + message.author.discriminator
