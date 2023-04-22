@@ -11,6 +11,12 @@ TIME_BUFFER = 1
 TIMEOUT = 30
 BONUS_TIMEOUT = 15
 
+async def permission_denied(message):
+	await message.channel.send(embed=discord.Embed(title="You can't use Speechle commands in a Speechle room!", color=discord.Color.red()))
+
+async def show_help(message):
+	await message.reply(embed=discord.Embed(title="Commands available", description="``s!start``\nStarts a game of Speechle\n\n``s!stop``\nStops your game of Speechle\n\n``s!stats``\nShows your Speechle stats\n\n``s!leaderboard``\nShows the leaderboard", color=discord.Color.blurple()))
+
 async def create_channel(message):
 	channelName = re.sub(r"[^a-z]+", "", message.author.name.lower()) + "-" + message.author.discriminator
 
@@ -40,10 +46,10 @@ async def delete_channel(message):
 		await category.delete()
 
 async def start_game(bot, message):
-	async def update_message(myView, sentView, channel, myEmbed, content):
+	async def update_message(wordApi, myView, sentView, channel, myEmbed, myTitle):
 		myView.button.disabled = True
 		await sentView.edit(view=myView, embed=myEmbed)
-		await channel.send(content)
+		await channel.send(embed=discord.Embed(title=myTitle, description=["The word was ``" + wordApi.word + "``. Better luck next time! Type ``s!start`` outside of this room to play again to start a new game!", ""][myTitle == "Correct!"], color=[discord.Color.red(), discord.Color.green()][myTitle == "Correct!"]))
 
 	def update_database(id, totalScore, totalTime, totalWord):
 		try:
@@ -86,17 +92,17 @@ async def start_game(bot, message):
 				message = await bot.wait_for('message', check=lambda received: received.author == message.author and received.channel == channel, timeout=(TIMEOUT))
 			except asyncio.TimeoutError:
 				update_database(str(message.author.id), totalScore, totalTime, totalWord)
-				return await update_message(myView, sentView, channel, discord.Embed(title=f"Final score: {totalScore}", description=f"Time: {TIMEOUT}.00 seconds", color=discord.Color.red()), "**Time's up!** The word was ``" + wordApi.word + "``. Better luck next time! Type ``s!start`` outside of this room to play again to start a new game!")
+				return await update_message(wordApi, myView, sentView, channel, discord.Embed(title=f"Final score: {totalScore}", description=f"Time: {TIMEOUT}.00 seconds", color=discord.Color.red()), "Time's up!")
 			if message.content == wordApi.word:
 				elapsedTime = time.perf_counter() - startTime
 				score[0] -= (elapsedTime > BONUS_TIMEOUT)
 				totalScore += score[0]
 				totalTime += elapsedTime
 				totalWord += 1
-				await update_message(myView, sentView, channel, discord.Embed(title=f"Current score: {totalScore}", description=f"Time: {round(elapsedTime, 2)} seconds", color=discord.Color.green()), "**Correct!**")
+				await update_message(wordApi, myView, sentView, channel, discord.Embed(title=f"Current score: {totalScore}", description=f"Time: {round(elapsedTime, 2)} seconds", color=discord.Color.green()), "Correct!")
 			else:
 				update_database(str(message.author.id), totalScore, totalTime, totalWord)
-				return await update_message(myView, sentView, channel, discord.Embed(title=f"Final score: {totalScore}", description=f"Time: {round(time.perf_counter() - startTime, 2)} seconds", color=discord.Color.red()), "**Incorrect!** The word was ``" + wordApi.word + "``. Better luck next time!\nType ``s!start`` outside of this room to play again to start a new game!")
+				return await update_message(wordApi, myView, sentView, channel, discord.Embed(title=f"Final score: {totalScore}", description=f"Time: {round(time.perf_counter() - startTime, 2)} seconds", color=discord.Color.red()), "Incorrect!")
 	except Exception as e:
 		return await channel.send(embed=discord.Embed(title="Something broke again, please try again later :smiling_face_with_tear:", description=f"Error: {str(e)}", color=discord.Color.red()))
 
