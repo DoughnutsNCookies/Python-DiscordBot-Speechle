@@ -1,5 +1,5 @@
 from events_utils import create_channel, delete_channel, start_game, show_stats
-from replit import db 
+from replit import db
 import discord
 import re
 
