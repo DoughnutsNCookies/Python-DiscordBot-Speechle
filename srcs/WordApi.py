@@ -30,9 +30,9 @@ class WordApi:
 						extracted = extracted.text.strip().split(':')
 						self.definition = "".join([extracted[0], extracted[0][:-1]][extracted[0][-1] == '.'].split('.')[-1].strip())
 						tts = gTTS(text=self.word, lang='en')
-						tts.save(self.word + '-audio.mp3')
-						audioData, sr = librosa.load(self.word + '-audio.mp3', sr=None)
-						soundfile.write(self.word + '-audio.mp3', audioData * 5, sr)
+						tts.save(self.word + '.mp3')
+						audioData, sr = librosa.load(self.word + '.mp3', sr=None)
+						soundfile.write(self.word + '.mp3', audioData * 5, sr)
 				else:
 					print(f'Failed to retrieve the definition for {self.word}: {response.status_code}')
 			except Exception as error:
@@ -40,6 +40,6 @@ class WordApi:
 	
 	def cleanup(self):
 		try:
-			os.remove(self.word + "audio.mp3")
+			os.remove(self.word + ".mp3")
 		except FileNotFoundError:
 			pass

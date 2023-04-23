@@ -81,7 +81,7 @@ async def start_game(bot, message):
 			score = [3]
 			await channel.send("Generating word...")
 			wordApi.generate_word()
-			with open (wordApi.word + '-audio.mp3', 'rb') as f:
+			with open (wordApi.word + '.mp3', 'rb') as f:
 				myFile = discord.File(f, filename='audio.mp3')
 			myView = MyView(channel, wordApi, score)
 			sentView = await channel.send(file=myFile, view=myView, embed=discord.Embed(title=f"Time runs out <t:{int(time.time()) + TIMEOUT + TIME_BUFFER}:R>", color=discord.Color.blurple()))
