@@ -14,9 +14,5 @@ class MyView(View):
 	async def on_button_click(self, interaction: discord.Interaction):		
 		self.button.disabled = True
 		self.score[0] -= 1
-		self.wordApi.generate_definition()
-		with open (self.wordApi.word + '-definition.mp3', 'rb') as f:
-			file = discord.File(f, filename='definition.mp3')
-			await self.channel.send(file=file)
-		self.wordApi.cleanup()
+		await self.channel.send(embed=discord.Embed(title="Definition", description=self.wordApi.definition, color=discord.Color.blurple()))
 		await interaction.response.edit_message(view=self)

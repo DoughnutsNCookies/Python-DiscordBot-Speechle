@@ -38,12 +38,6 @@ class WordApi:
 			except Exception as error:
 				raise ValueError("From WordApi - " + str(error))
 	
-	def generate_definition(self):
-		tts = gTTS(text=self.definition, lang='en')
-		tts.save(self.word + '-definition.mp3')
-		audioData, sr = librosa.load(self.word + '-definition.mp3', sr=None)
-		soundfile.write(self.word + '-definition.mp3', audioData * 5, sr)
-	
 	def cleanup(self):
 		for file in [f"{self.word}-audio.mp3", f"{self.word}-definition.mp3"]:
 			try:
