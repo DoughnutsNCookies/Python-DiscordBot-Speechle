@@ -93,7 +93,7 @@ async def start_game(bot, message):
 			except asyncio.TimeoutError:
 				update_database(str(message.author.id), totalScore, totalTime, totalWord)
 				return await update_message(wordApi, myView, sentView, channel, discord.Embed(title=f"Final score: {totalScore}", description=f"Time: {TIMEOUT}.00 seconds", color=discord.Color.red()), "Time's up!")
-			if message.content == wordApi.word:
+			if message.content.upper() == wordApi.word.upper():
 				elapsedTime = time.perf_counter() - startTime
 				score[0] -= (elapsedTime > BONUS_TIMEOUT)
 				totalScore += score[0]
