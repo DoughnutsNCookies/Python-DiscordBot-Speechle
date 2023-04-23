@@ -18,6 +18,5 @@ class MyView(View):
 		with open (self.wordApi.word + '-definition.mp3', 'rb') as f:
 			file = discord.File(f, filename='definition.mp3')
 			await self.channel.send(file=file)
-		await self.channel.send(self.wordApi.definition)
 		self.wordApi.cleanup()
 		await interaction.response.edit_message(view=self)
