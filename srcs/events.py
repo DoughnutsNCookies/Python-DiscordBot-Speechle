@@ -1,4 +1,4 @@
-from events_utils import permission_denied, show_help, create_channel, delete_channel, start_game, show_stats
+from events_utils import permission_denied, show_help, create_channel, delete_channel, start_game, show_stats, show_leaderboard
 import discord
 import re
 
@@ -10,7 +10,7 @@ async def emessage(bot, message):
 	if message.author == bot.user:
 		return
 	if re.sub(r"[^a-z]+", "", message.author.name.lower()) + "-" + message.author.discriminator == message.channel.name and message.content.startswith('s!'):
-		return permission_denied(message)
+		return await permission_denied(message)
 	if message.content == 's!help':
 		await show_help(message)
 	if message.content == 's!start':
@@ -21,3 +21,5 @@ async def emessage(bot, message):
 		await delete_channel(message)
 	if message.content == 's!stats':
 		await show_stats(message)
+	if message.content == 's!leaderboard':
+		await show_leaderboard(bot, message)

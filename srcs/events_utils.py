@@ -104,7 +104,7 @@ async def start_game(bot, message):
 				update_database(str(message.author.id), totalScore, totalTime, totalWord)
 				return await update_message(wordApi, myView, sentView, channel, discord.Embed(title=f"Final score: {totalScore}", description=f"Time: {round(time.perf_counter() - startTime, 2)} seconds", color=discord.Color.red()), "Incorrect!")
 	except Exception as e:
-		return await channel.send(embed=discord.Embed(title="Something broke again, please try again later :smiling_face_with_tear:", description=f"Error: {str(e)}", color=discord.Color.red()))
+		await channel.send(embed=discord.Embed(title="Something broke again, please try again later :smiling_face_with_tear:", description=f"Error: {str(e)}", color=discord.Color.red()))
 
 async def show_stats(message):
 	try:
@@ -118,3 +118,27 @@ async def show_stats(message):
 		await message.reply(embed=discord.Embed(title="Your Speechle stats", description=f"Games played: **{games}**\nHighest score: **{score}**\nTotal time played: **{round(time, 2)}s**\nTotal words transcribed: **{words}**\n\nAverage words transcribed per game: **{aWPG}**\nAverage time per word: **{aTPW}s**\nAverage time per game: **{aTPG}s**", color=discord.Color.green()))
 	except KeyError:
 		await message.reply(embed=discord.Embed(title="No data found!", description="Use ``s!start`` to start a game!"))
+
+async def show_leaderboard(bot, message):
+	keys = db.keys()
+	database = {}
+	for key in keys:
+		if key.endswith("-score"):
+			database[key[:-6]] = db[key]
+	sortedDatabase = sorted(database.items(), key=lambda x: x[1], reverse=True)
+	try:
+		authorRank = sortedDatabase.index((str(message.author.id), database[str(message.author.id)]))
+	except KeyError:
+		authorRank = -1
+	while len(sortedDatabase) > 10:
+		sortedDatabase.pop()
+	description = ""
+	for i, userData in enumerate(sortedDatabase):
+		try:
+			userName = await bot.fetch_user(userData[0])
+		except discord.errors.NotFound:
+			userName = "unknown"
+		description += f"**{i + 1}**: **{userName}** - **{userData[1]}**\n"
+	if authorRank != -1:
+		description += f"**--------------------**\n**{authorRank + 1}**: **{message.author.name + '#' + message.author.discriminator}** - **{db[str(message.author.id) + '-score']}**"
+	await message.reply(embed=discord.Embed(title="Leaderboards", description=description, color=discord.Color.blurple()))
