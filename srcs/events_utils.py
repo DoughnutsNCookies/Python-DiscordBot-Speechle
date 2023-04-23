@@ -49,7 +49,7 @@ async def start_game(bot, message):
 	async def update_message(wordApi, myView, sentView, channel, myEmbed, myTitle):
 		myView.button.disabled = True
 		await sentView.edit(view=myView, embed=myEmbed)
-		await channel.send(embed=discord.Embed(title=myTitle, description=["The word was ``" + wordApi.word + "``. Better luck next time! Type ``s!start`` outside of this room to play again to start a new game!", ""][myTitle == "Correct!"], color=[discord.Color.red(), discord.Color.green()][myTitle == "Correct!"]))
+		await channel.send(embed=discord.Embed(title=myTitle, description=[f"The word was ``{wordApi.word}``.\nDefinition: ``{wordApi.definition}``. Better luck next time! Type ``s!start`` outside of this room to play again to start a new game!", ""][myTitle == "Correct!"], color=[discord.Color.red(), discord.Color.green()][myTitle == "Correct!"]))
 
 	def update_database(id, totalScore, totalTime, totalWord):
 		try:
