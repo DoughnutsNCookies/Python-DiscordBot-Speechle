@@ -86,7 +86,6 @@ async def start_game(bot, message):
 			myView = MyView(channel, wordApi, score)
 			sentView = await channel.send(file=myFile, view=myView, embed=discord.Embed(title=f"Time runs out <t:{int(time.time()) + TIMEOUT + TIME_BUFFER}:R>", color=discord.Color.blurple()))
 			wordApi.cleanup()
-			await channel.send(f"Word: {wordApi.word}\nDefinition: {wordApi.definition}\n")
 			try:
 				startTime = time.perf_counter()
 				message = await bot.wait_for('message', check=lambda received: received.author == message.author and received.channel == channel, timeout=(TIMEOUT))
