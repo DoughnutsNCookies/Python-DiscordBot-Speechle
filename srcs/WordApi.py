@@ -39,8 +39,7 @@ class WordApi:
 				raise ValueError("From WordApi - " + str(error))
 	
 	def cleanup(self):
-		for file in [f"{self.word}-audio.mp3", f"{self.word}-definition.mp3"]:
-			try:
-				os.remove(file)
-			except FileNotFoundError:
-				pass
+		try:
+			os.remove(self.word + "audio.mp3")
+		except FileNotFoundError:
+			pass
