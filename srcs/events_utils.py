@@ -112,7 +112,9 @@ async def show_stats(message):
 		time = db[str(message.author.id) + "-time"]
 		words = db[str(message.author.id) + "-word"]
 		aWPG = round(words / games, 2)
-		aTPW = round(time / words, 2)
+		aTPW = 0
+		if words > 0:
+			aTPW = round(time / words, 2)
 		aTPG = round(time / games, 2)
 		await message.reply(embed=discord.Embed(title="Your Speechle stats", description=f"Games played: **{games}**\nHighest score: **{score}**\nTotal time played: **{round(time, 2)}s**\nTotal words transcribed: **{words}**\n\nAverage words transcribed per game: **{aWPG}**\nAverage time per word: **{aTPW}s**\nAverage time per game: **{aTPG}s**", color=discord.Color.green()))
 	except KeyError:
