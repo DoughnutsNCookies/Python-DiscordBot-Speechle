@@ -1,4 +1,5 @@
 from events_utils import permission_denied, show_help, create_channel, delete_channel, start_game, show_stats, show_leaderboard
+import random
 import discord
 import re
 
@@ -23,7 +24,9 @@ async def emessage(bot, message):
 		await show_stats(message)
 	if message.content == 's!leaderboard':
 		await show_leaderboard(bot, message)
-	if "true" in message.content.lower() or "truth" in message.content.lower():
+	if "yes or no" in message.content.lower() or "true or false" in message.content.lower():
+		await message.reply(["Yes of course", "No you donkey"][random.randint(0,1)])
+	elif "true" in message.content.lower() or "truth" in message.content.lower():
 		await message.reply("So true!")
 	elif "false" in message.content.lower():
 		await message.reply("Yep that's :billed_cap:")
