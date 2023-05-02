@@ -26,4 +26,4 @@ async def emessage(bot, message):
 	if "true" in message.content.lower():
 		await message.reply("So true!")
 	elif "false" in message.content.lower():
-		await message.reply("Nah that's :billed_cap:")
+		await message.reply("Yep that's :billed_cap:")
