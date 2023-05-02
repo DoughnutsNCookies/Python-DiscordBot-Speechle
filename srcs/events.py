@@ -25,7 +25,7 @@ async def emessage(bot, message):
 	if message.content == 's!leaderboard':
 		await show_leaderboard(bot, message)
 	if "yes or no" in message.content.lower() or "true or false" in message.content.lower():
-		await message.reply(["Yes of course", "No you donkey"][random.randint(0,1)])
+		await message.reply(["Of course can la", "Yes, correct", "No you donkey", "Of course not dumbass"][random.randint(0,3)])
 	elif "true" in message.content.lower() or "truth" in message.content.lower():
 		await message.reply("So true!")
 	elif "false" in message.content.lower():
