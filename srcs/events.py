@@ -23,7 +23,9 @@ async def emessage(bot, message):
 		await show_stats(message)
 	if message.content == 's!leaderboard':
 		await show_leaderboard(bot, message)
-	if "true" in message.content.lower():
+	if "true" in message.content.lower() or "truth" in message.content.lower():
 		await message.reply("So true!")
 	elif "false" in message.content.lower():
 		await message.reply("Yep that's :billed_cap:")
+	elif "onz" in message.content.lower():
+		await message.reply("Onz")
